@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const dscController = require('../controllers/dscController');
-router.get('/:deviceID', dscController.getDeviceStatus);
-router.post('/:deviceID/override', dscController.overrideStatus);
-router.post('/:deviceID/reset', dscController.resetDeviceScore);
+const { getDeviceStatus, overrideStatus, resetDeviceScore } = require('../controllers/dscController');
+
+router.get('/:deviceID', getDeviceStatus);
+router.post('/:deviceID/override', overrideStatus);
+router.post('/:deviceID/reset', resetDeviceScore);
+
 module.exports = router;

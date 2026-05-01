@@ -22,7 +22,8 @@ const getAllDevices = async (req, res) => {
   try {
     const contract = getContract('dr');
     const result = await contract.evaluateTransaction('GetAllDevices');
-    res.json(JSON.parse(result.toString()));
+    const resultStr = Buffer.from(result).toString('utf8');
+    res.json(resultStr ? JSON.parse(resultStr) : []);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -32,7 +33,7 @@ const getDevice = async (req, res) => {
   try {
     const contract = getContract('dr');
     const result = await contract.evaluateTransaction('GetDevice', req.params.deviceID);
-    res.json(JSON.parse(result.toString()));
+    res.json(JSON.parse(Buffer.from(result).toString('utf8')));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -62,4 +63,10 @@ const updateDeviceStatus = async (req, res) => {
   }
 };
 
-module.exports = { registerDevice, getAllDevices, getDevice, updateDevice, updateDeviceStatus };
+module.exports = {
+  registerDevice,
+  getAllDevices,
+  getDevice,
+  updateDevice,
+  updateDeviceStatus
+};

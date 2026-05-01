@@ -46,4 +46,9 @@ const reportDeviceHealth = async (req, res) => {
   }
 };
 
-module.exports = { sendHeartbeat, requestAccess, transmitData, reportDeviceHealth };
+module.exports = {
+  sendHeartbeat,
+  requestAccess,
+  transmitData,
+  reportDeviceHealth
+};

@@ -5,11 +5,12 @@ const getAllDevicesWithCredit = async (req, res) => {
     const drContract = getContract('dr');
     const dscContract = getContract('dsc');
     const devicesRaw = await drContract.evaluateTransaction('GetAllDevices');
-    const devices = JSON.parse(devicesRaw.toString());
+    const resultStr = Buffer.from(devicesRaw).toString('utf8');
+    const devices = resultStr ? JSON.parse(resultStr) : [];
     const enriched = await Promise.all(devices.map(async (device) => {
       try {
         const statusRaw = await dscContract.evaluateTransaction('GetDeviceStatus', device.deviceID);
-        const status = JSON.parse(statusRaw.toString());
+        const status = JSON.parse(Buffer.from(statusRaw).toString('utf8'));
         return { ...device, ...status };
       } catch {
         return { ...device, creditScore: null, trustCategory: 'Unknown', lastEvaluated: null };
@@ -26,16 +27,24 @@ const getDeviceDetail = async (req, res) => {
     const drContract = getContract('dr');
     const dscContract = getContract('dsc');
     const dalContract = getContract('dal');
+
     const deviceRaw = await drContract.evaluateTransaction('GetDevice', req.params.deviceID);
-    const device = JSON.parse(deviceRaw.toString());
+    const device = JSON.parse(Buffer.from(deviceRaw).toString('utf8'));
+
     const statusRaw = await dscContract.evaluateTransaction('GetDeviceStatus', req.params.deviceID);
-    const status = JSON.parse(statusRaw.toString());
+    const status = JSON.parse(Buffer.from(statusRaw).toString('utf8'));
+
     const activitiesRaw = await dalContract.evaluateTransaction('GetActivityByDevice', req.params.deviceID);
-    const activities = JSON.parse(activitiesRaw.toString());
+    const activitiesStr = Buffer.from(activitiesRaw).toString('utf8');
+    const activities = activitiesStr ? JSON.parse(activitiesStr) : [];
+
     res.json({ ...device, ...status, activities });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-module.exports = { getAllDevicesWithCredit, getDeviceDetail };
+module.exports = {
+  getAllDevicesWithCredit,
+  getDeviceDetail
+};

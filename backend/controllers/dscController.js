@@ -4,7 +4,7 @@ const getDeviceStatus = async (req, res) => {
   try {
     const contract = getContract('dsc');
     const result = await contract.evaluateTransaction('GetDeviceStatus', req.params.deviceID);
-    res.json(JSON.parse(result.toString()));
+    res.json(JSON.parse(Buffer.from(result).toString('utf8')));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -30,4 +30,8 @@ const resetDeviceScore = async (req, res) => {
   }
 };
 
-module.exports = { getDeviceStatus, overrideStatus, resetDeviceScore };
+module.exports = {
+  getDeviceStatus,
+  overrideStatus,
+  resetDeviceScore
+};

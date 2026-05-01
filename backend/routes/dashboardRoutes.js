@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const dashboardController = require('../controllers/dashboardController');
+const { getAllDevicesWithCredit, getDeviceDetail } = require('../controllers/dashboardController');
 
-router.get('/devices', dashboardController.getAllDevicesWithCredit);
-router.get('/devices/:deviceID', dashboardController.getDeviceDetail);
+router.get('/devices', getAllDevicesWithCredit);
+router.get('/devices/:deviceID', getDeviceDetail);
 
 module.exports = router;

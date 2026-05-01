@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const doController = require('../controllers/doController');
+const { sendHeartbeat, requestAccess, transmitData, reportDeviceHealth } = require('../controllers/doController');
 
-router.post('/heartbeat', doController.sendHeartbeat);
-router.post('/request-access', doController.requestAccess);
-router.post('/transmit-data', doController.transmitData);
-router.post('/health-report', doController.reportDeviceHealth);
+router.post('/heartbeat', sendHeartbeat);
+router.post('/request-access', requestAccess);
+router.post('/transmit-data', transmitData);
+router.post('/health-report', reportDeviceHealth);
 
 module.exports = router;
